@@ -10,7 +10,7 @@
 
 #include "Obstacle.h"
 #include "Constants.h"
-#include "Car.h"
+#include "Player.h"
 
 class Game
 {
@@ -20,13 +20,13 @@ class Game
     private:
         void newGame();
         void gameOver();
-        static bool isGameOver(Car::Lane carLane, Car::Lane objLane, Obstacle::Type type);
+        static bool isGameOver(Player::Lane carLane, Player::Lane objLane, Obstacle::Type type);
 
         sf::RenderWindow m_window;
 
         sf::VertexArray m_dividers;
         std::deque<Obstacle> m_obstacles;
-        Car m_leftCar;
+        Player m_Player;
 
         sf::Font m_font;
         sf::Text m_prompt;
