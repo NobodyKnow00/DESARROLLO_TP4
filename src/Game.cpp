@@ -18,7 +18,8 @@ Game::Game() :
     m_dividers[4] = sf::Vertex({LANE_WIDTH * 2, 0}, sf::Color(180, 180, 180));
     m_dividers[5] = sf::Vertex({LANE_WIDTH * 2, WINDOW_HEIGHT}, sf::Color(180, 180, 180));
 
-    m_Player .setKey(sf::Keyboard::Left);
+    m_Player.setKeyLeft(sf::Keyboard::Left);
+    m_Player.setKeyRight(sf::Keyboard::Right);
     
 
     //TODO What should I do if loading this fails ?
@@ -143,10 +144,10 @@ void Game::run()
     }
 }
 
-bool Game::isGameOver(Player::Lane carLane, Player::Lane objLane, Obstacle::Type type)
+bool Game::isGameOver(Player::Lane playerLane, Player::Lane objLane, Obstacle::Type type)
 {
-    if ((carLane == objLane && type == Obstacle::Circle)
-        || (carLane != objLane && type == Obstacle::Triangle))
+    if ((playerLane == objLane && type == Obstacle::Circle)
+        || (playerLane != objLane && type == Obstacle::Triangle))
             return false;
     return true;
 }

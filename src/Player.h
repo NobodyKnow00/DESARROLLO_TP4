@@ -5,9 +5,10 @@
 class Player : public sf::Drawable
 {
     public:
-        enum Lane { Left = -1, Right = 1};
+        enum Lane { Left = -1, Middle = 0, Right = 1};
         Player(const sf::Color& color, const sf::Vector2f& pos);
-        void setKey(sf::Keyboard::Key key);
+        void setKeyLeft(sf::Keyboard::Key key);
+        void setKeyRight(sf::Keyboard::Key key);
         void handleInput(const sf::Event& event);
         Lane getLane();
         void applyTexture();
@@ -23,7 +24,8 @@ class Player : public sf::Drawable
         int m_targetX;
         Lane m_lane;
         sf::RectangleShape m_shape;
-        sf::Keyboard::Key m_key;
+        sf::Keyboard::Key m_keyLeft;
+        sf::Keyboard::Key m_keyRight;
         sf::Vector2f m_center;
 };
 

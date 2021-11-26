@@ -3,7 +3,7 @@
 
 sf::Texture Player::m_carTexture;
 
-Player::Player(const sf::Color& color, const sf::Vector2f& pos) : m_transition(0), m_lane(Left), m_shape({OBJECT_SIZE, CAR_HEIGHT}), m_key(sf::Keyboard::Space), m_center(pos)
+Player::Player(const sf::Color& color, const sf::Vector2f& pos) : m_transition(0), m_lane(Left), m_shape({OBJECT_SIZE, CAR_HEIGHT}), m_center(pos)
 {
     m_shape.setFillColor(color);
     m_shape.setOrigin(m_shape.getLocalBounds().width / 2, m_shape.getLocalBounds().height);
@@ -14,23 +14,30 @@ void Player::applyTexture()
 {
     m_shape.setTexture(&m_carTexture);
 }
-void Player::setKey(sf::Keyboard::Key key)
+void Player::setKeyLeft(sf::Keyboard::Key key)
 {
-    m_key = key;
+    m_keyLeft = key;
 }
-
+void Player::setKeyRight(sf::Keyboard::Key key)
+{
+    m_keyRight = key;
+}
 void Player::handleInput(const sf::Event& event)
 {
-    if (event.type == sf::Event::KeyPressed && event.key.code == m_key)
+    if (event.type == sf::Event::KeyPressed && event.key.code == m_keyLeft)
     {
-        setLane(static_cast<Lane>(m_lane * -1));
+        setLane(static_cast<Lane>(m_lane - 1));           
+    }
+    else if (event.type == sf::Event::KeyPressed && event.key.code == m_keyRight)
+    {
+        setLane(static_cast<Lane>(m_lane + 1));
     }
 }
 
 Player::Lane Player::getLane()
 {
     if (m_transition != 0)
-        return (static_cast<int>(m_shape.getPosition().x / LANE_WIDTH) % 2) ? Player::Left : Player::Left;
+        return (static_cast<int>(m_shape.getPosition().x / LANE_WIDTH) % 2) ? Player::Left : Player::Right;
     return m_lane;
 }
 
