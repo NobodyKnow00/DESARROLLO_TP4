@@ -5,7 +5,7 @@
 Game::Game() :
     m_window(sf::VideoMode(LANE_WIDTH * 3, WINDOW_HEIGHT), "ProtoName", sf::Style::Close | sf::Style::Titlebar),
     m_dividers(sf::Lines, 6),
-    m_Player (LEFT_COLOR,  sf::Vector2f{LANE_WIDTH, WINDOW_HEIGHT}),
+    m_Player (BASE_COLOR,  sf::Vector2f{LANE_WIDTH, WINDOW_HEIGHT}),
     m_overlayBg({LANE_WIDTH * 4, WINDOW_HEIGHT}),
     m_playing(false)
 {
@@ -16,11 +16,7 @@ Game::Game() :
     m_dividers[2] = sf::Vertex({LANE_WIDTH * 3, 0}, sf::Color(180, 180, 180));
     m_dividers[3] = sf::Vertex({LANE_WIDTH * 3, WINDOW_HEIGHT}, sf::Color(180, 180, 180));
     m_dividers[4] = sf::Vertex({LANE_WIDTH * 2, 0}, sf::Color(180, 180, 180));
-    m_dividers[5] = sf::Vertex({LANE_WIDTH * 2, WINDOW_HEIGHT}, sf::Color(180, 180, 180));
-
-    m_Player.setKeyLeft(sf::Keyboard::Left);
-    m_Player.setKeyRight(sf::Keyboard::Right);
-    
+    m_dividers[5] = sf::Vertex({LANE_WIDTH * 2, WINDOW_HEIGHT}, sf::Color(180, 180, 180));   
 
     //TODO What should I do if loading this fails ?
     m_font.loadFromFile("assets/font.ttf");
@@ -39,9 +35,9 @@ Game::Game() :
     //If these fail to load, simple Circles/Rectangles will be used.
     Obstacle::m_circleTexture.loadFromFile("assets/circle.png");
     Obstacle::m_triangleTexture.loadFromFile("assets/triangle.png");
-    Player::m_carTexture.loadFromFile("assets/car.png");
+    Player::m_playerTexture.loadFromFile("assets/car.png");
     m_Player.applyTexture();
-    m_Player.reset(Player::Right);
+    m_Player.reset();
  
     m_bgMusic.openFromFile("assets/bgm.ogg");
     m_bgMusic.setLoop(true);
@@ -56,7 +52,7 @@ void Game::newGame()
     m_velocity = INITIAL_VELOCITY;
     m_distance = SPAWN_DIST;
     m_playing = true;
-    m_Player.reset(Player::Right);
+    m_Player.reset();
 }
 
 void Game::run()
@@ -90,22 +86,17 @@ void Game::run()
             if (m_distance > SPAWN_DIST)
             {
                 ++m_score;
-                m_obstacles.emplace_front(static_cast<Obstacle::Type>(rand() % 2),
-                                            LEFT_COLOR,
-                                            sf::Vector2f{LANE_WIDTH / 2.f + LANE_WIDTH * (rand() % 3), 0});
-                
+                m_obstacles.emplace_front(static_cast<Obstacle::Type>(rand() % 2), BASE_COLOR, sf::Vector2f{LANE_WIDTH / 2.f + LANE_WIDTH * (rand() % 3), 0});             
                 m_distance -= SPAWN_DIST;
             }
-
+            
             for(auto it = m_obstacles.begin(); it != m_obstacles.end(); ++it)
             {
                 it->getShape().move(0, m_velocity * dt);
-                if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT - CAR_HEIGHT - OBJECT_SIZE
-                    && it->getShape().getGlobalBounds().top < WINDOW_HEIGHT - OBJECT_SIZE)
-                {
-                    auto& car = it->getShape().getGlobalBounds().left < 2 * LANE_WIDTH ? m_Player : m_Player;
-                    Player::Lane lane = static_cast<int>(it->getShape().getGlobalBounds().left / LANE_WIDTH) % 2 ? Player::Right : Player::Left;
-                    if (lane == car.getLane())
+                if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT - PLAYER_HEIGHT - OBJECT_SIZE && it->getShape().getGlobalBounds().top < WINDOW_HEIGHT - OBJECT_SIZE) // When a triangle collides the player
+                {                  
+                    Player::Lane lane = static_cast<Player::Lane>(rand() % 3 - 1);
+                    if (lane == m_Player.getLane())
                     {
                         if (it->getType() == Obstacle::Triangle)
                         {
@@ -115,7 +106,7 @@ void Game::run()
                         it = std::prev(m_obstacles.erase(it));
                     }
                 }
-                else if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT)
+                else if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT) // When the circle crosses the base 'y' line
                 {
                     if (it->getType() == Obstacle::Circle)
                     {
@@ -124,6 +115,7 @@ void Game::run()
                     }
                     it = std::prev(m_obstacles.erase(it));
                 }
+               
             }
 
             m_Player.update(dt);

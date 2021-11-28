@@ -3,7 +3,7 @@
 
 int main()
 {
-    Game TwoCars;
-    TwoCars.run();
+    Game Protoype;
+    Protoype.run();
     return 0;
 }

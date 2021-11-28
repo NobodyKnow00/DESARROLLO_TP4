@@ -7,14 +7,12 @@ class Player : public sf::Drawable
     public:
         enum Lane { Left = -1, Middle = 0, Right = 1};
         Player(const sf::Color& color, const sf::Vector2f& pos);
-        void setKeyLeft(sf::Keyboard::Key key);
-        void setKeyRight(sf::Keyboard::Key key);
         void handleInput(const sf::Event& event);
         Lane getLane();
         void applyTexture();
-        static sf::Texture m_carTexture;
+        static sf::Texture m_playerTexture;
         void update(float dt);
-        void reset(Lane lane);
+        void reset();
     protected:
         void draw(sf::RenderTarget& target, const sf::RenderStates states) const;
     private:
