@@ -13,6 +13,7 @@ class Player : public sf::Drawable
         static sf::Texture m_playerTexture;
         void update(float dt);
         void reset();
+        int getX();
     protected:
         void draw(sf::RenderTarget& target, const sf::RenderStates states) const;
     private:

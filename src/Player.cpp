@@ -82,6 +82,11 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
     target.draw(m_shape, states);
 }
 
+int Player::getX()
+{ 
+    return  m_shape.getPosition().x;
+}
+
 void Player::setLane(Player::Lane lane)
 {
     if (lane == Left)

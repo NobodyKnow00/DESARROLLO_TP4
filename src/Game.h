@@ -31,8 +31,11 @@ class Game
         std::deque<Obstacle> m_obstacles;
         Player m_Player;
 
+
         sf::Font m_font;
-        sf::Text m_prompt;
+        sf::Text m_textStart;
+        sf::Text m_textScore;
+        sf::Text m_textVersion;
         sf::RectangleShape m_overlayBg;
 
         sf::Music m_bgMusic;
@@ -42,6 +45,7 @@ class Game
         sf::Clock m_timer;
         int m_score;
         bool m_playing;
+        bool start;
         float m_distance,
               m_velocity;
 

@@ -4,8 +4,6 @@
 
 Menu::Menu(sf::RenderWindow& m_window, sf::Font m_font)
 {
-	
-
 	selectedItemIndex = 0;
 }
 Menu::~Menu()
