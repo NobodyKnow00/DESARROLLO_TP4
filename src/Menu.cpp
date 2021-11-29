@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include "SFML/Graphics.hpp"
 #include <iostream>
+#include "Constants.h"
 
 Menu::Menu(sf::RenderWindow& m_window, sf::Font m_font)
 {
@@ -27,10 +28,15 @@ void Menu::moveUp(sf::Text menuArray[])
 
 void Menu::moveDown(sf::Text menuArray[])
 {
-	if (selectedItemIndex + 1 < ARRAY_AMOUNT)
+	if (selectedItemIndex + 1 < MENU_ARRAY_AMOUNT)
 	{		
 		menuArray[selectedItemIndex].setFillColor(sf::Color::White);
 		selectedItemIndex++;	
 		menuArray[selectedItemIndex].setFillColor(sf::Color::Red);
 	}
+}
+
+int Menu::getKeyPressedItem()
+{
+	return selectedItemIndex;
 }

@@ -40,16 +40,18 @@ class Game
 
         sf::Music m_bgMusic;
 
-        sf::Text menuArray[ARRAY_AMOUNT];
+        sf::Text menuArray[MENU_ARRAY_AMOUNT];
+        sf::Text creditsArray[MENU_ARRAY_AMOUNT];
 
         sf::Clock m_timer;
         int m_score;
         bool m_playing;
         bool start;
+        bool showCredits;
         float m_distance,
               m_velocity;
 
         
 };
 
-#endif // GAME_H
+#endif

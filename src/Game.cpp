@@ -8,7 +8,8 @@ Game::Game() :
     m_Player (BASE_COLOR,  sf::Vector2f{LANE_WIDTH, WINDOW_HEIGHT}),
     m_overlayBg({LANE_WIDTH * 4, WINDOW_HEIGHT}),
     m_playing(false),
-    start(false)
+    start(false),
+    showCredits(false)
 {
     m_window.setVerticalSyncEnabled(true);
 
@@ -62,8 +63,25 @@ Game::Game() :
     menuArray[2].setCharacterSize(30);
     menuArray[2].setFillColor(sf::Color::White);
     menuArray[2].setString("Exit");
-    menuArray[2].setPosition((m_window.getSize().x - menuArray[2].getLocalBounds().width) / 2.f, ((m_window.getSize().y - menuArray[2].getLocalBounds().height) / 2.f) + 50);
+    menuArray[2].setPosition((m_window.getSize().x - menuArray[2].getLocalBounds().width) / 2.f, ((m_window.getSize().y - creditsArray[2].getLocalBounds().height) / 2.f) + 50);
 
+    creditsArray[0].setFont(m_font);
+    creditsArray[0].setCharacterSize(20);
+    creditsArray[0].setFillColor(sf::Color::White);
+    creditsArray[0].setString("Made by:");
+    creditsArray[0].setPosition((m_window.getSize().x - creditsArray[0].getLocalBounds().width) / 2.f, WINDOW_HEIGHT - 200);
+
+    creditsArray[1].setFont(m_font);
+    creditsArray[1].setCharacterSize(20);
+    creditsArray[1].setFillColor(sf::Color::White);
+    creditsArray[1].setString("Ignacio Sanduay & Matias Pierpaoli");
+    creditsArray[1].setPosition((m_window.getSize().x - creditsArray[1].getLocalBounds().width) / 2.f, WINDOW_HEIGHT - 170);
+
+    creditsArray[2].setFont(m_font);
+    creditsArray[2].setCharacterSize(20);
+    creditsArray[2].setFillColor(sf::Color::White);
+    creditsArray[2].setString("Using SFML-2.5.1");
+    creditsArray[2].setPosition((m_window.getSize().x - creditsArray[2].getLocalBounds().width) / 2.f, WINDOW_HEIGHT - 140);
 
     //If these fail to load, simple Circles/Rectangles will be used.
     Obstacle::m_circleTexture.loadFromFile("assets/circle.png");
@@ -222,7 +240,7 @@ void Game::runGame()
         sf::Event event;
 
         while (m_window.pollEvent(event))
-        {
+        {         
             switch (event.type)
             {
             case sf::Event::KeyReleased:
@@ -253,7 +271,12 @@ void Game::runGame()
                        
                         break;
                     case 1:
-                        std::cout << "Option button has been pressed" << std::endl;
+                       
+                        if (menu.getKeyPressedItem() == 1)
+                        {
+                            showCredits = true;
+                        }
+
                         break;
                     case 2:
                         m_window.close();
@@ -272,9 +295,23 @@ void Game::runGame()
 
         m_window.clear();
 
-        for (int i = 0; i < ARRAY_AMOUNT; i++)
+        for (int i = 0; i < MENU_ARRAY_AMOUNT; i++)
         {
             m_window.draw(menuArray[i]);
+        }
+
+        if (showCredits == true)
+        {
+            for (int i = 0; i < CREDITS_ARRAY_AMOUNT; i++)
+            {
+                m_window.draw(creditsArray[i]);
+            }
+
+            if (menu.getKeyPressedItem() != 1)
+            {
+                showCredits = false;
+            }
+            
         }
 
         m_window.draw(m_textVersion);
