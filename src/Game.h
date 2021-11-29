@@ -8,6 +8,7 @@
 #include <memory>
 #include <algorithm>
 
+#include "Menu.h"
 #include "Obstacle.h"
 #include "Constants.h"
 #include "Player.h"
@@ -16,9 +17,11 @@ class Game
 {
     public:
         Game();
-        void run();
+        void runMenu();
+        void runGame();
     private:
         void newGame();
+        void gameLoop();
         void gameOver();
         static bool isGameOver(Player::Lane carLane, Player::Lane objLane, Obstacle::Type type);
 
@@ -39,6 +42,8 @@ class Game
         bool m_playing;
         float m_distance,
               m_velocity;
+
+        
 };
 
 #endif // GAME_H

@@ -12,6 +12,7 @@ Player::Player(const sf::Color& color, const sf::Vector2f& pos) : m_shape({OBJEC
 
     m_transition = 0;
     m_lane = Middle;
+    m_targetX = 0;
 
     m_keyLeft = sf::Keyboard::Left;
     m_keyRight = sf::Keyboard::Right;

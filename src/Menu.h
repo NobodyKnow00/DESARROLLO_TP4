@@ -1,7 +1,8 @@
 #pragma once
-
+#include "SFML/Graphics.hpp"
 
 #define ARRAY_AMOUNT 3
+
 
 class Menu
 {
@@ -17,6 +18,6 @@ public:
 	void draw(sf::RenderWindow &window);
 	void moveUp();
 	void moveDown();
-	int getKeyPressed();
+	int getKeyPressedItem() { return selectedItemIndex; }
 
 };

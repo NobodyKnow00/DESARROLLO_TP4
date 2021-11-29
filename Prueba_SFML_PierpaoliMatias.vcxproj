@@ -164,14 +164,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Obstacle.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Menu.h" />
+    <ClInclude Include="src\Menu.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Obstacle.h" />
     <ClInclude Include="src\Constants.h" />

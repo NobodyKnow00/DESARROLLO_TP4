@@ -4,6 +4,6 @@
 int main()
 {
     Game Protoype;
-    Protoype.run();
+    Protoype.runGame();
     return 0;
 }
