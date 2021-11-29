@@ -3,9 +3,9 @@
 
 sf::Texture Player::m_playerTexture;
 
-Player::Player(const sf::Color& color, const sf::Vector2f& pos) : m_shape({OBJECT_SIZE, PLAYER_HEIGHT}), m_center(pos)
+Player::Player( const sf::Vector2f& pos) : m_shape({OBJECT_SIZE + 60, PLAYER_HEIGHT}), m_center(pos)
 {
-    m_shape.setFillColor(color);
+  
     m_shape.setOrigin(m_shape.getLocalBounds().width / 2, m_shape.getLocalBounds().height);
     m_center.x = SECOND_LANE_CENTER_POSITION;
     m_shape.setPosition(m_center);

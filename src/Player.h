@@ -6,7 +6,7 @@ class Player : public sf::Drawable
 {
     public:
         enum Lane { Left = -1, Middle = 0, Right = 1};
-        Player(const sf::Color& color, const sf::Vector2f& pos);
+        Player( const sf::Vector2f& pos);
         void handleInput(const sf::Event& event);
         Lane getLane();
         void applyTexture();

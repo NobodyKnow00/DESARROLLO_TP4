@@ -5,7 +5,7 @@
 Game::Game() :
     m_window(sf::VideoMode(LANE_WIDTH * 3, WINDOW_HEIGHT), "ProtoName", sf::Style::Close | sf::Style::Titlebar),
     m_dividers(sf::Lines, 6),
-    m_Player (BASE_COLOR,  sf::Vector2f{LANE_WIDTH, WINDOW_HEIGHT}),
+    m_Player ( sf::Vector2f{LANE_WIDTH, WINDOW_HEIGHT}),
     m_overlayBg({LANE_WIDTH * 4, WINDOW_HEIGHT}),
     m_playing(false),
     start(false),
@@ -86,7 +86,7 @@ Game::Game() :
     //If these fail to load, simple Circles/Rectangles will be used.
     Obstacle::m_circleTexture.loadFromFile("assets/circle.png");
     Obstacle::m_triangleTexture.loadFromFile("assets/triangle.png");
-    Player::m_playerTexture.loadFromFile("assets/car.png");
+    Player::m_playerTexture.loadFromFile("assets/SpaceShip.png");
     m_Player.applyTexture();
     m_Player.reset();
  
