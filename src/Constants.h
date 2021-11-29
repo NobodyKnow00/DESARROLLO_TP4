@@ -11,6 +11,9 @@ const int INITIAL_VELOCITY = 220;
 const int ACCELERATION = 5;
 const int OBJS_ON_SCREEN = 2 * (1 + WINDOW_HEIGHT / (SPAWN_DIST + OBJECT_SIZE));
 const int PLAYER_TRANSITION_SPEED = 300;
+const int FIRST_LANE_CENTER_POSITION = 60;
+const int SECOND_LANE_CENTER_POSITION = 180;
+const int THIRD_LANE_CENTER_POSITION = 300;
 
 const sf::Color BASE_COLOR = sf::Color(0xFF4758FF);
 //const sf::Color RIGHT_COLOR = sf::Color(0x1EBAF1FF);

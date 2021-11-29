@@ -48,7 +48,7 @@ void Game::newGame()
     if (m_bgMusic.getStatus() != sf::SoundSource::Playing)
         m_bgMusic.play();
     m_obstacles.clear();
-    m_score = 1 - OBJS_ON_SCREEN / 2;
+    m_score = 0;
     m_velocity = INITIAL_VELOCITY;
     m_distance = SPAWN_DIST;
     m_playing = true;
@@ -85,7 +85,7 @@ void Game::run()
 
             if (m_distance > SPAWN_DIST)
             {
-                ++m_score;
+                //++m_score;
                 m_obstacles.emplace_front(static_cast<Obstacle::Type>(rand() % 2), BASE_COLOR, sf::Vector2f{LANE_WIDTH / 2.f + LANE_WIDTH * (rand() % 3), 0});             
                 m_distance -= SPAWN_DIST;
             }
@@ -94,29 +94,60 @@ void Game::run()
             {
                 it->getShape().move(0, m_velocity * dt);
                 if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT - PLAYER_HEIGHT - OBJECT_SIZE && it->getShape().getGlobalBounds().top < WINDOW_HEIGHT - OBJECT_SIZE) // When a triangle collides the player
-                {                  
-                    Player::Lane lane = static_cast<Player::Lane>(rand() % 3 - 1);
-                    if (lane == m_Player.getLane())
+                {                            
+                    if (it->getShape().getPosition().x == FIRST_LANE_CENTER_POSITION && m_Player.getLane() == Player::Left)
                     {
                         if (it->getType() == Obstacle::Triangle)
                         {
                             gameOver();
                             break;
                         }
+                        else
+                        {
+                            m_score++;
+                        }
                         it = std::prev(m_obstacles.erase(it));
                     }
-                }
-                else if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT) // When the circle crosses the base 'y' line
-                {
-                    if (it->getType() == Obstacle::Circle)
+                    else if (it->getShape().getPosition().x == SECOND_LANE_CENTER_POSITION && m_Player.getLane() == Player::Middle)
                     {
-                        gameOver();
-                        break;
+                        if (it->getType() == Obstacle::Triangle)
+                        {
+                            gameOver();
+                            break;
+                        }
+                        else
+                        {
+                            m_score++;
+                        }
+                        it = std::prev(m_obstacles.erase(it));
                     }
+                    else if (it->getShape().getPosition().x == THIRD_LANE_CENTER_POSITION && m_Player.getLane() == Player::Right)
+                    {
+                        
+                        if (it->getType() == Obstacle::Triangle)
+                        {
+                            gameOver();
+                            break;
+                        }
+                        else
+                        {
+                            m_score++;
+                        }
+                        it = std::prev(m_obstacles.erase(it));
+                    }                 
+                }
+                else if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT && it->getType() == Obstacle::Circle) // When the circle crosses the base 'y' line
+                {                 
+                     gameOver();
+                     break;
+                    
                     it = std::prev(m_obstacles.erase(it));
                 }
-               
+                 
+                
             }
+           
+           
 
             m_Player.update(dt);
         }

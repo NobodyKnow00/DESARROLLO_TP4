@@ -7,7 +7,7 @@ Player::Player(const sf::Color& color, const sf::Vector2f& pos) : m_shape({OBJEC
 {
     m_shape.setFillColor(color);
     m_shape.setOrigin(m_shape.getLocalBounds().width / 2, m_shape.getLocalBounds().height);
-    m_center.x = LANE_WIDTH * 3 / 2;
+    m_center.x = SECOND_LANE_CENTER_POSITION;
     m_shape.setPosition(m_center);
 
     m_transition = 0;
@@ -43,9 +43,9 @@ void Player::handleInput(const sf::Event& event)
 
 Player::Lane Player::getLane()
 {
-    if (m_transition != 0)
-        return (static_cast<int>(m_shape.getPosition().x / LANE_WIDTH) % 2) ? Player::Left : Player::Right;
+    //if (m_transition == 0)
     return m_lane;
+    
 }
 
 void Player::reset()
@@ -85,7 +85,7 @@ void Player::setLane(Player::Lane lane)
 {
     if (lane == Left)
     {
-        m_targetX = 120 - m_shape.getSize().x;
+        m_targetX = FIRST_LANE_CENTER_POSITION;
     }
     else if (lane == Middle)
     {
@@ -93,7 +93,7 @@ void Player::setLane(Player::Lane lane)
     }
     else
     {
-        m_targetX = 240 + m_shape.getSize().x;
+        m_targetX = THIRD_LANE_CENTER_POSITION;
     }
    
     m_transition = lane - m_lane;
