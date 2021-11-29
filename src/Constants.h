@@ -19,6 +19,5 @@ const int CREDITS_ARRAY_AMOUNT = 3;
 
 
 const sf::Color BASE_COLOR = sf::Color(0xFF4758FF);
-//const sf::Color RIGHT_COLOR = sf::Color(0x1EBAF1FF);
 const sf::Color BACKGROUND_COLOR = sf::Color(0x211357FF);
 #endif //CONSTANTS_H

@@ -14,6 +14,7 @@ class Player : public sf::Drawable
         void update(float dt);
         void reset();
         int getX();
+
     protected:
         void draw(sf::RenderTarget& target, const sf::RenderStates states) const;
     private:

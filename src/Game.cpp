@@ -9,7 +9,9 @@ Game::Game() :
     m_overlayBg({LANE_WIDTH * 4, WINDOW_HEIGHT}),
     m_playing(false),
     start(false),
-    showCredits(false)
+    showCredits(false),
+    aux(0),
+    pause(false)
 {
     m_window.setVerticalSyncEnabled(true);
 
@@ -30,7 +32,8 @@ Game::Game() :
     m_textStart.setString("Toma los circulos, evade los triangulos.\n"
                        "     Controla el auto con las flechas \n"
                        "                  izquierda y derecha,\n"
-                       "       Presiona espacio para empezar.");
+                       "       Presiona espacio para empezar,\n"
+                       "               'P' para pausar el juego.");
     m_textStart.setPosition((m_window.getSize().x - m_textStart.getLocalBounds().width) / 2.f,
                          (m_window.getSize().y - m_textStart.getLocalBounds().height) / 2.f);
 
@@ -97,108 +100,76 @@ Game::Game() :
     
 }
 
-void Game::runMenu()
-{
-    
-}
-
-void Game::newGame()
-{
-   // if (m_bgMusic.getStatus() != sf::SoundSource::Playing)
-        //m_bgMusic.play();
-    m_obstacles.clear();
-    m_score = 0;
-    m_velocity = INITIAL_VELOCITY;
-    m_distance = SPAWN_DIST;
-    m_playing = true;
-    start = false;
-    m_Player.reset();
-}
-
-void Game::gameLoop()
+void Game::gameLoop(sf::Event event)
 {
 
     sf::Sprite s(m_backGround);
 
-    sf::Event event;
     m_window.pollEvent(event);
 
     if (start == true)
     {
-        auto dt = m_timer.restart().asSeconds();
-
-        if (m_playing)
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::P)
         {
-            m_velocity += ACCELERATION * dt;
-            m_distance += m_velocity * dt;
-
-            if (m_distance > SPAWN_DIST)
+            pause = !pause; 
+            if (pause == false)
             {
-                m_obstacles.emplace_front(static_cast<Obstacle::Type>(rand() % 2), BASE_COLOR, sf::Vector2f{ LANE_WIDTH / 2.f + LANE_WIDTH * (rand() % 3), 0 });
-                m_distance -= SPAWN_DIST;
+                aux++;
             }
-
-            for (auto it = m_obstacles.begin(); it != m_obstacles.end(); ++it)
-            {
-                it->getShape().move(0, m_velocity * dt);
-                if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT - PLAYER_HEIGHT - OBJECT_SIZE && it->getShape().getGlobalBounds().top < WINDOW_HEIGHT - OBJECT_SIZE) // When a triangle collides the player
-                {
-                    if (it->getShape().getPosition().x == FIRST_LANE_CENTER_POSITION && m_Player.getLane() == Player::Left)
-                    {
-                        if (it->getType() == Obstacle::Triangle)
-                        {
-                            gameOver();
-                            break;
-                        }
-                        else
-                        {
-                            m_score++;
-                        }
-                        it = std::prev(m_obstacles.erase(it));
-                    }
-                    else if (it->getShape().getPosition().x == SECOND_LANE_CENTER_POSITION && m_Player.getLane() == Player::Middle)
-                    {
-                        if (it->getType() == Obstacle::Triangle)
-                        {
-                            gameOver();
-                            break;
-                        }
-                        else
-                        {
-                            m_score++;
-                        }
-                        it = std::prev(m_obstacles.erase(it));
-                    }
-                    else if (it->getShape().getPosition().x == THIRD_LANE_CENTER_POSITION && m_Player.getLane() == Player::Right)
-                    {
-
-                        if (it->getType() == Obstacle::Triangle)
-                        {
-                            gameOver();
-                            break;
-                        }
-                        else
-                        {
-                            m_score++;
-                        }
-                        it = std::prev(m_obstacles.erase(it));
-                    }
-                }
-                else if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT && it->getType() == Obstacle::Circle) // When the circle crosses the base 'y' line
-                {
-                    gameOver();
-                    break;
-
-                    it = std::prev(m_obstacles.erase(it));
-                }
-            }
-
-            m_Player.handleInput(event);
-            event.key.code = sf::Keyboard::Space; // Renew event key code
-            m_Player.update(dt);
-            m_textScore.setString(" Puntaje: " + std::to_string(m_score));
         }
 
+        if (pause == false)
+        {          
+            float dt = m_timer.restart().asSeconds();
+
+            if (m_playing)
+            {
+                m_velocity += ACCELERATION * dt;
+                m_distance += m_velocity * dt;
+
+                if (m_distance > SPAWN_DIST)
+                {                  
+                    m_obstacles.emplace_front(static_cast<Obstacle::Type>(rand() % 2), BASE_COLOR, sf::Vector2f{ LANE_WIDTH / 2.f + LANE_WIDTH * (rand() % 3), 0 });
+                    m_distance -= SPAWN_DIST;
+                }
+
+                for (std::list<Obstacle>::iterator it = m_obstacles.begin(); it != m_obstacles.end(); ++it)
+                {
+                    it->getShape().move(0, m_velocity * dt);
+                    if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT - PLAYER_HEIGHT - OBJECT_SIZE && it->getShape().getGlobalBounds().top < WINDOW_HEIGHT - OBJECT_SIZE) // When an obstacle is at 'y' player area
+                    {
+                        if (it->getShape().getPosition().x == m_Player.getX())
+                        {
+                            if (it->getType() == Obstacle::Triangle)
+                            {
+                                m_playing = false;
+                                break;
+                            }
+                            else
+                            {
+                                m_score++;
+                            }
+                            it = std::prev(m_obstacles.erase(it));
+                        }
+                    }
+                    else if (it->getShape().getGlobalBounds().top > WINDOW_HEIGHT && it->getType() == Obstacle::Circle) // When the circle crosses the base 'y' line
+                    {
+                        if (it->getType() == Obstacle::Circle)
+                        {
+                            m_playing = false;
+                            break;
+                        }
+                        
+
+                        it = std::prev(m_obstacles.erase(it));
+                    }
+                }
+
+                m_Player.handleInput(event);
+                m_Player.update(dt);
+                m_textScore.setString(" Puntaje: " + std::to_string(m_score));
+            }
+        }          
     }
     else
     {
@@ -214,26 +185,36 @@ void Game::gameLoop()
     m_window.clear(sf::Color::White);
     m_window.draw(s);
     
-   
-    if (start == false)
+    if (pause == false)
     {
-        m_window.draw(m_dividers);
-        
-        m_window.draw(m_overlayBg);
-        m_window.draw(m_textStart);
-           
+        if (start == false)
+        {
+            m_window.draw(m_dividers);
+
+            m_window.draw(m_overlayBg);
+            m_window.draw(m_textStart);
+
+        }
+        else
+        {
+            m_window.draw(m_dividers);
+            for (auto& o : m_obstacles)
+                m_window.draw(o);
+            m_window.draw(m_Player);
+
+            m_window.draw(m_textScore);
+
+        }      
     }
     else
     {
         m_window.draw(m_dividers);
         for (auto& o : m_obstacles)
             m_window.draw(o);
-        m_window.draw(m_Player);  
-
-        m_window.draw(m_textScore);
-          
+        m_window.draw(m_Player);
+        m_window.draw(m_textScore);       
     }
-    
+
     m_window.display();
 }
 
@@ -245,9 +226,7 @@ void Game::runGame()
     Menu menu(m_window, m_font);
    
     while (m_window.isOpen())
-    {
-        sf::Event event;
-
+    {       
         while (m_window.pollEvent(event))
         {         
             switch (event.type)
@@ -269,11 +248,19 @@ void Game::runGame()
                     case 0:
                         if (m_playing == false)
                         {
-                            newGame();
+                            /*if (m_bgMusic.getStatus() != sf::SoundSource::Playing) m_bgMusic.play();*/
+                            m_obstacles.clear();
+                            m_score = 0;
+                            m_velocity = INITIAL_VELOCITY;
+                            m_distance = SPAWN_DIST;
+                            m_playing = true;
+                            start = false;
+                            pause = false;
+                            m_Player.reset();
                             
                             do
                             {
-                                gameLoop();
+                                gameLoop(event);
                                
                             } while (m_playing == true);
                         }
@@ -329,16 +316,5 @@ void Game::runGame()
     }
 }
 
-bool Game::isGameOver(Player::Lane playerLane, Player::Lane objLane, Obstacle::Type type)
-{
-    if ((playerLane == objLane && type == Obstacle::Circle)
-        || (playerLane != objLane && type == Obstacle::Triangle))
-            return false;
-    return true;
-}
 
-void Game::gameOver() 
-{
-    m_playing = false;
-   
-}
+

@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
-#include <deque>
+#include <list>
 #include <memory>
 #include <algorithm>
 
@@ -17,21 +17,16 @@
 class Game
 {
     public:
-        Game();
-        void runMenu();
+        Game();      
         void runGame();
-    private:
-        void newGame();
-        void gameLoop();
-        void gameOver();
-        static bool isGameOver(Player::Lane carLane, Player::Lane objLane, Obstacle::Type type);
+    private:       
+        void gameLoop(sf::Event event);
 
         sf::RenderWindow m_window;
 
         sf::VertexArray m_dividers;
-        std::deque<Obstacle> m_obstacles;
-        Player m_Player;
-
+        std::list<Obstacle> m_obstacles;
+        Player m_Player;       
 
         sf::Font m_font;
         sf::Text m_textStart;
@@ -47,10 +42,13 @@ class Game
         sf::Text menuArray[MENU_ARRAY_AMOUNT];
         sf::Text creditsArray[MENU_ARRAY_AMOUNT];
 
+        int aux;
+
         sf::Clock m_timer;
         int m_score;
         bool m_playing;
         bool start;
+        bool pause;
         bool showCredits;
         float m_distance,
               m_velocity;

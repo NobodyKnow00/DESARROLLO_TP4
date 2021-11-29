@@ -3,7 +3,8 @@
 
 int main()
 {
-    Game Protoype;
-    Protoype.runGame();
+    Game* Protoype = new Game();
+    Protoype->runGame();
+    delete Protoype;
     return 0;
 }

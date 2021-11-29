@@ -44,8 +44,8 @@ void Player::handleInput(const sf::Event& event)
 
 Player::Lane Player::getLane()
 {
-    //if (m_transition == 0)
-    return m_lane;
+    if (m_transition != 0) return m_lane;
+    
     
 }
 
@@ -84,7 +84,7 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 
 int Player::getX()
 { 
-    return  m_shape.getPosition().x;
+    return m_shape.getPosition().x;
 }
 
 void Player::setLane(Player::Lane lane)
