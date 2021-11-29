@@ -13,6 +13,7 @@
 #include "Constants.h"
 #include "Player.h"
 
+
 class Game
 {
     public:
@@ -37,6 +38,9 @@ class Game
         sf::Text m_textScore;
         sf::Text m_textVersion;
         sf::RectangleShape m_overlayBg;
+
+        sf::Texture m_backGround;
+
 
         sf::Music m_bgMusic;
 

@@ -87,9 +87,10 @@ Game::Game() :
     Obstacle::m_circleTexture.loadFromFile("assets/circle.png");
     Obstacle::m_triangleTexture.loadFromFile("assets/triangle.png");
     Player::m_playerTexture.loadFromFile("assets/SpaceShip.png");
+    m_backGround.loadFromFile("assets/space.png");
     m_Player.applyTexture();
     m_Player.reset();
- 
+
     m_bgMusic.openFromFile("assets/bgm.ogg");
     m_bgMusic.setLoop(true);
 
@@ -116,6 +117,9 @@ void Game::newGame()
 
 void Game::gameLoop()
 {
+
+    sf::Sprite s(m_backGround);
+
     sf::Event event;
     m_window.pollEvent(event);
 
@@ -204,7 +208,12 @@ void Game::gameLoop()
         }
     }
       
-    m_window.clear(BACKGROUND_COLOR);
+    
+    
+
+    m_window.clear(sf::Color::White);
+    m_window.draw(s);
+    
    
     if (start == false)
     {
