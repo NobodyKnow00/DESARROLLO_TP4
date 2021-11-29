@@ -3,21 +3,21 @@
 
 #define ARRAY_AMOUNT 3
 
-
 class Menu
 {
 private:
 	int selectedItemIndex;
-	sf::Font font;
-	sf::Text menu[ARRAY_AMOUNT];
+
+	
+	
 
 public:
-	Menu(float width, float height);
+	Menu(sf::RenderWindow& window, sf::Font m_font);
 	~Menu();
 
 	void draw(sf::RenderWindow &window);
-	void moveUp();
-	void moveDown();
+	void moveUp(sf::Text menuArray[]);
+	void moveDown(sf::Text menuArray[]);
 	int getKeyPressedItem() { return selectedItemIndex; }
 
 };

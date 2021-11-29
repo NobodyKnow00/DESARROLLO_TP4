@@ -3,6 +3,7 @@
 #include <iterator>
 
 Game::Game() :
+    m_window(sf::VideoMode(LANE_WIDTH * 3, WINDOW_HEIGHT), "ProtoName", sf::Style::Close | sf::Style::Titlebar),
     m_dividers(sf::Lines, 6),
     m_Player (BASE_COLOR,  sf::Vector2f{LANE_WIDTH, WINDOW_HEIGHT}),
     m_overlayBg({LANE_WIDTH * 4, WINDOW_HEIGHT}),
@@ -34,6 +35,25 @@ Game::Game() :
                          (m_window.getSize().y - m_prompt.getLocalBounds().height) / 2.f);
 
     m_overlayBg.setFillColor(sf::Color(0, 0, 0, 100));
+
+    menuArray[0].setFont(m_font);
+    menuArray[0].setCharacterSize(30);
+    menuArray[0].setFillColor(sf::Color::White);
+    menuArray[0].setString("Play");
+    menuArray[0].setPosition((m_window.getSize().x - menuArray[0].getLocalBounds().width) / 2.f, ((m_window.getSize().y - menuArray[0].getLocalBounds().height) / 2.f) - 50);
+
+    menuArray[1].setFont(m_font);
+    menuArray[1].setCharacterSize(30);
+    menuArray[1].setFillColor(sf::Color::White);
+    menuArray[1].setString("Credits");
+    menuArray[1].setPosition((m_window.getSize().x - menuArray[1].getLocalBounds().width) / 2.f, (m_window.getSize().y - menuArray[1].getLocalBounds().height) / 2.f);
+
+    menuArray[2].setFont(m_font);
+    menuArray[2].setCharacterSize(30);
+    menuArray[2].setFillColor(sf::Color::White);
+    menuArray[2].setString("Exit");
+    menuArray[2].setPosition((m_window.getSize().x - menuArray[2].getLocalBounds().width) / 2.f, ((m_window.getSize().y - menuArray[2].getLocalBounds().height) / 2.f) + 50);
+
 
     //If these fail to load, simple Circles/Rectangles will be used.
     Obstacle::m_circleTexture.loadFromFile("assets/circle.png");
@@ -161,60 +181,72 @@ void Game::runGame()
 {
     srand(time(nullptr));
     sf::Event event;
-    sf::RenderWindow m_window(sf::VideoMode(LANE_WIDTH * 3, WINDOW_HEIGHT), "ProtoName", sf::Style::Close | sf::Style::Titlebar);
-    Menu menu(m_window.getSize().x, m_window.getSize().y);
+    
+    Menu menu(m_window, m_font);
+   
     while (m_window.isOpen())
     {
+        sf::Event event;
+
         while (m_window.pollEvent(event))
         {
             switch (event.type)
             {
-            case sf::Keyboard::Up:
-                menu.moveUp();
-                break;
-            case sf::Keyboard::Down:
-                menu.moveDown();
+            case sf::Event::KeyReleased:
+                switch (event.key.code)
+                {
+                case sf::Keyboard::Up:
+                    menu.moveUp(menuArray);
+                    break;
+
+                case sf::Keyboard::Down:
+                    menu.moveDown(menuArray);
+                    break;
+
+                case sf::Keyboard::Return:
+                    switch (menu.getKeyPressedItem())
+                    {
+                    case 0:
+                        if (m_playing)
+                        {
+                            do
+                            {
+                                gameLoop();
+                                m_Player.handleInput(event);
+                            } while (m_playing == true);
+                        }
+                        else /*if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)*/
+                        {
+                            m_playing = true;
+                            newGame();
+                        }
+                        break;
+                    case 1:
+                        std::cout << "Option button has been pressed" << std::endl;
+                        break;
+                    case 2:
+                        m_window.close();
+                        break;
+                    }
+
+                    break;
+                }
+
                 break;
             case sf::Event::Closed:
                 m_window.close();
                 break;
-            case sf::Keyboard::Return:
-                switch (menu.getKeyPressedItem())
-                {
-                case 0:
-                    if (m_playing)
-                    {
-                        do
-                        {
-                            gameLoop();
-                            m_Player.handleInput(event);
-                        } while (m_playing == true);
-                        
-                    }
-                    else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
-                    {
-                        m_playing = true;
-                        newGame();
-                    }
-                    break;
-                case 1:
-
-                    break;
-                case 2:
-                    m_window.close();
-                    break;
-                default:
-                    break;
-                }
-            default:
-                break;
             }
         }
 
-        m_window.clear(BACKGROUND_COLOR);
-        menu.draw(m_window);
-        m_window.display();
+        m_window.clear();
 
+        for (int i = 0; i < ARRAY_AMOUNT; i++)
+        {
+            m_window.draw(menuArray[i]);
+        }
+
+        m_window.display();
     }
 }
 

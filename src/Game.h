@@ -37,6 +37,8 @@ class Game
 
         sf::Music m_bgMusic;
 
+        sf::Text menuArray[ARRAY_AMOUNT];
+
         sf::Clock m_timer;
         int m_score;
         bool m_playing;
