@@ -15,7 +15,6 @@ public:
 	Menu(sf::RenderWindow& window, sf::Font m_font);
 	~Menu();
 
-	void draw(sf::RenderWindow &window);
 	void moveUp(sf::Text menuArray[]);
 	void moveDown(sf::Text menuArray[]);
 	int getKeyPressedItem();

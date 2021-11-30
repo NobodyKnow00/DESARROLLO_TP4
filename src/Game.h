@@ -29,6 +29,7 @@ class Game
         Player m_Player;       
 
         sf::Font m_font;
+        sf::Text m_textName;
         sf::Text m_textStart;
         sf::Text m_textScore;
         sf::Text m_textVersion;
@@ -50,8 +51,7 @@ class Game
         bool start;
         bool pause;
         bool showCredits;
-        float m_distance,
-              m_velocity;
+        float m_distance, m_velocity;
 
         
 };

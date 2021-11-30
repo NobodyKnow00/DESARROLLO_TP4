@@ -11,10 +11,6 @@ Menu::~Menu()
 {
 
 }
-void Menu::draw(sf::RenderWindow &window)
-{
-	
-}
 
 void Menu::moveUp(sf::Text menuArray[])
 {

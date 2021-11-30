@@ -3,7 +3,7 @@
 #include <iterator>
 
 Game::Game() :
-    m_window(sf::VideoMode(LANE_WIDTH * 3, WINDOW_HEIGHT), "ProtoName", sf::Style::Close | sf::Style::Titlebar),
+    m_window(sf::VideoMode(LANE_WIDTH * 3, WINDOW_HEIGHT), "Space Runners", sf::Style::Close | sf::Style::Titlebar),
     m_dividers(sf::Lines, 6),
     m_Player ( sf::Vector2f{LANE_WIDTH, WINDOW_HEIGHT}),
     m_overlayBg({LANE_WIDTH * 4, WINDOW_HEIGHT}),
@@ -37,6 +37,10 @@ Game::Game() :
     m_textStart.setPosition((m_window.getSize().x - m_textStart.getLocalBounds().width) / 2.f,
                          (m_window.getSize().y - m_textStart.getLocalBounds().height) / 2.f);
 
+    m_textName.setFont(m_font);
+    m_textName.setCharacterSize(40);
+    m_textName.setString("Space Runners");
+    m_textName.setPosition((m_window.getSize().x - m_textName.getLocalBounds().width) / 2.f, 60);
 
     m_textVersion.setFont(m_font);
     m_textVersion.setCharacterSize(22);
@@ -52,7 +56,7 @@ Game::Game() :
 
     menuArray[0].setFont(m_font);
     menuArray[0].setCharacterSize(30);
-    menuArray[0].setFillColor(sf::Color::White);
+    menuArray[0].setFillColor(sf::Color::Red);
     menuArray[0].setString("Play");
     menuArray[0].setPosition((m_window.getSize().x - menuArray[0].getLocalBounds().width) / 2.f, ((m_window.getSize().y - menuArray[0].getLocalBounds().height) / 2.f) - 50);
 
@@ -108,7 +112,7 @@ void Game::gameLoop(sf::Event event)
     m_window.pollEvent(event);
 
     if (start == true)
-    {
+    {      
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::P)
         {
             pause = !pause; 
@@ -221,17 +225,21 @@ void Game::gameLoop(sf::Event event)
 void Game::runGame()
 {
     srand(time(nullptr));
-    sf::Event event;
+    
     
     Menu menu(m_window, m_font);
    
     while (m_window.isOpen())
     {       
+        sf::Event event;
+
         while (m_window.pollEvent(event))
         {         
             switch (event.type)
             {
-            case sf::Event::KeyReleased:
+            case sf::Event::KeyReleased:             
+                menuArray[menu.getKeyPressedItem()].setFillColor(sf::Color::Red);
+
                 switch (event.key.code)
                 {
                 case sf::Keyboard::Up:
@@ -310,6 +318,7 @@ void Game::runGame()
             
         }
 
+        m_window.draw(m_textName);
         m_window.draw(m_textVersion);
        
         m_window.display();
